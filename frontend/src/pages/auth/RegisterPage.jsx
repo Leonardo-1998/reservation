@@ -14,7 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const registerSchema = z.object({
   email: z.string().email({ message: "Email tidak valid" }),
@@ -23,9 +24,11 @@ const registerSchema = z.object({
 });
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
@@ -36,11 +39,24 @@ export default function RegisterPage() {
     },
   });
 
-  function onSubmit(values) {
-    console.log(values);
-    // Handle registration logic here
-    alert("Registrasi berhasil! (Check console)");
-  }
+  const onSubmit = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/user/register",
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      reset();
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4 dark:from-slate-950 dark:to-slate-900">

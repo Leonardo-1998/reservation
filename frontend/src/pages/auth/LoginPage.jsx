@@ -14,7 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const loginSchema = z.object({
   identifier: z
@@ -24,9 +25,11 @@ const loginSchema = z.object({
 });
 
 export default function LoginPage() {
+  const navigation = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -36,11 +39,27 @@ export default function LoginPage() {
     },
   });
 
-  function onSubmit(values) {
-    console.log(values);
-    // Handle login logic here
-    alert("Login berhasil! (Check console)");
-  }
+  const onSubmit = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/user/login",
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const token = response.data.data;
+      localStorage.setItem("acceessToken", token);
+
+      // reset();
+      // navigation("/reservation");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4 dark:from-slate-950 dark:to-slate-900">

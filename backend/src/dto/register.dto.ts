@@ -4,7 +4,7 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(3, { message: 'Username minimal 3 karakter' })
-  name: string;
+  username: string;
 
   @IsEmail()
   @IsNotEmpty()

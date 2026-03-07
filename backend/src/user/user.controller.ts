@@ -1,22 +1,27 @@
-import { Controller, Get, Post, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
+import { ApiResponse } from '@/common/response.interface';
+import { successResponse } from '@/common/api.response';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('login')
-  async login(loginDto: LoginDto): Promise<string> {
-    const login = this.userService.login(loginDto);
+  async login(@Body() loginDto: LoginDto): Promise<ApiResponse | null> {
+    const login = await this.userService.login(loginDto);
 
-    return 'A';
+    return successResponse(login, 'Berhasil Login');
   }
 
   @Post('register')
-  async register(registerDto: RegisterDto): Promise<string> {
-    const register = this.userService.register(registerDto);
-    return 's';
+  async register(
+    @Body() registerDto: RegisterDto,
+  ): Promise<ApiResponse | null> {
+    const register = await this.userService.register(registerDto);
+
+    return successResponse(register, 'Berhasil Register');
   }
 }
