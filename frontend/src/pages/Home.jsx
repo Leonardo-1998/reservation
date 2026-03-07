@@ -16,7 +16,6 @@ import {
 function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
       <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-slate-950 py-24 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(79,70,229,0.3),transparent_70%)]" />
         <div className="container relative z-10 mx-auto px-4 text-center">
@@ -46,12 +45,10 @@ function Home() {
           </div>
         </div>
 
-        {/* Animated Orbs */}
         <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
         <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-purple-600/20 blur-3xl" />
       </section>
 
-      {/* Features Section */}
       <section className="bg-slate-50 py-24 dark:bg-slate-900/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -83,7 +80,6 @@ function Home() {
         </div>
       </section>
 
-      {/* How It Works Section */}
       <section className="py-24 bg-white dark:bg-slate-950">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-16">
@@ -123,7 +119,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">

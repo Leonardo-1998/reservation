@@ -7,16 +7,3 @@ export function successResponse<T>(
 ): ApiResponse<T> {
   return { success: true, message, data, statusCode };
 }
-
-// export function errorResponse<T>(
-//   data: T,
-//   message: string = 'Error',
-//   statusCode: number = 400,
-// ): ApiResponse {
-//   return {
-//     success: false,
-//     message,
-//     data,
-//     statusCode,
-//   };
-// }

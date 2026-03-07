@@ -1,11 +1,35 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const payload = jwtDecode(token);
+        setUsername(payload.username);
+      } catch (error) {
+        console.error("Failed to decode token", error);
+        setUsername("");
+      }
+    } else {
+      setUsername("");
+    }
+  }, [token]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    setUsername("");
+    navigate("/");
+  };
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/60 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 md:px-8">
-        {/* Left: Logo */}
         <Link
           to="/"
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
@@ -28,7 +52,6 @@ function Navbar() {
           </span>
         </Link>
 
-        {/* Middle: Horizontal Navigation Menu */}
         <div className="hidden md:flex items-center gap-8">
           <Link
             to="/"
@@ -50,24 +73,40 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* Right: Login | Register */}
-        <div className="flex items-center gap-4">
+        {token && (
           <div className="flex items-center text-sm font-medium">
-            <Link
-              to="/login"
-              className="text-muted-foreground transition-colors hover:text-primary"
-            >
-              Login
-            </Link>
+            <span className="text-muted-foreground mr-1">
+              Hello, {username}
+            </span>
             <span className="mx-2 text-muted-foreground/40">|</span>
-            <Link
-              to="/register"
-              className="text-muted-foreground transition-colors hover:text-primary"
+            <button
+              onClick={handleLogout}
+              className="text-muted-foreground transition-colors hover:text-primary cursor-pointer"
             >
-              Register
-            </Link>
+              Logout
+            </button>
           </div>
-        </div>
+        )}
+
+        {!token && (
+          <div className="flex items-center gap-4">
+            <div className="flex items-center text-sm font-medium">
+              <Link
+                to="/login"
+                className="text-muted-foreground transition-colors hover:text-primary"
+              >
+                Login
+              </Link>
+              <span className="mx-2 text-muted-foreground/40">|</span>
+              <Link
+                to="/register"
+                className="text-muted-foreground transition-colors hover:text-primary"
+              >
+                Register
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

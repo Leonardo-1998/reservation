@@ -52,10 +52,10 @@ export default function LoginPage() {
       );
 
       const token = response.data.data;
-      localStorage.setItem("acceessToken", token);
+      localStorage.setItem("accessToken", token);
 
-      // reset();
-      // navigation("/reservation");
+      reset();
+      navigation("/reservation");
     } catch (error) {
       console.error(error);
     }
