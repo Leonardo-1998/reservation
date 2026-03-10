@@ -12,7 +12,6 @@ import { User } from '@/prisma/generated/prisma/client';
 
 import { comparePassword, hashPassword } from '@/utils/bcrypt.util';
 import { generateToken } from '@/utils/jwt.util';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -30,6 +29,7 @@ export class UserService {
     }
 
     const payload = {
+      id: user.id,
       username: user.username,
       email: user.email,
     };

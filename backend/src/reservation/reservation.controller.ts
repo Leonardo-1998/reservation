@@ -1,0 +1,40 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@/common/guards/auth.guard';
+import { ReservationService } from './reservation.service';
+import { ApiResponse } from '@/common/response.interface';
+import { successResponse } from '@/common/api.response';
+import { AddReservationDto } from '@/dto/add.reservation.dto';
+import { User } from '@/common/decorators/user.decorator';
+
+@Controller('reservation')
+export class ReservationController {
+  constructor(private readonly reservationService: ReservationService) {}
+
+  @Post('add')
+  @UseGuards(AuthGuard)
+  async addReservation(
+    @User('id') userId: string,
+    @Body() addReservationDto: AddReservationDto,
+  ): Promise<ApiResponse | null> {
+    console.log(addReservationDto);
+    const reservation = await this.reservationService.addReservation(
+      userId,
+      addReservationDto,
+    );
+
+    return successResponse(reservation, 'Berhasil menambahkan reservasi');
+  }
+
+  @Get('test')
+  test(): String {
+    return 'A';
+  }
+}

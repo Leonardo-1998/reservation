@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
   const onSubmit = async (values) => {
     try {
-      const response = await api.post("/user/register", values);
+      await api.post("/user/register", values);
 
       reset();
       navigate("/login");

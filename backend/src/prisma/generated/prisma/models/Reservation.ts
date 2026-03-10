@@ -28,7 +28,10 @@ export type ReservationMinAggregateOutputType = {
   id: string | null
   startTime: string | null
   endTime: string | null
+  date: Date | null
+  location: string | null
   court: string | null
+  price: string | null
   createdAt: Date | null
   updatedAt: Date | null
   isDeleted: boolean | null
@@ -39,7 +42,10 @@ export type ReservationMaxAggregateOutputType = {
   id: string | null
   startTime: string | null
   endTime: string | null
+  date: Date | null
+  location: string | null
   court: string | null
+  price: string | null
   createdAt: Date | null
   updatedAt: Date | null
   isDeleted: boolean | null
@@ -50,7 +56,10 @@ export type ReservationCountAggregateOutputType = {
   id: number
   startTime: number
   endTime: number
+  date: number
+  location: number
   court: number
+  price: number
   createdAt: number
   updatedAt: number
   isDeleted: number
@@ -63,7 +72,10 @@ export type ReservationMinAggregateInputType = {
   id?: true
   startTime?: true
   endTime?: true
+  date?: true
+  location?: true
   court?: true
+  price?: true
   createdAt?: true
   updatedAt?: true
   isDeleted?: true
@@ -74,7 +86,10 @@ export type ReservationMaxAggregateInputType = {
   id?: true
   startTime?: true
   endTime?: true
+  date?: true
+  location?: true
   court?: true
+  price?: true
   createdAt?: true
   updatedAt?: true
   isDeleted?: true
@@ -85,7 +100,10 @@ export type ReservationCountAggregateInputType = {
   id?: true
   startTime?: true
   endTime?: true
+  date?: true
+  location?: true
   court?: true
+  price?: true
   createdAt?: true
   updatedAt?: true
   isDeleted?: true
@@ -169,7 +187,10 @@ export type ReservationGroupByOutputType = {
   id: string
   startTime: string
   endTime: string
+  date: Date
+  location: string
   court: string
+  price: string
   createdAt: Date
   updatedAt: Date
   isDeleted: boolean
@@ -201,7 +222,10 @@ export type ReservationWhereInput = {
   id?: Prisma.StringFilter<"Reservation"> | string
   startTime?: Prisma.StringFilter<"Reservation"> | string
   endTime?: Prisma.StringFilter<"Reservation"> | string
+  date?: Prisma.DateTimeFilter<"Reservation"> | Date | string
+  location?: Prisma.StringFilter<"Reservation"> | string
   court?: Prisma.StringFilter<"Reservation"> | string
+  price?: Prisma.StringFilter<"Reservation"> | string
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   isDeleted?: Prisma.BoolFilter<"Reservation"> | boolean
@@ -213,7 +237,10 @@ export type ReservationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  date?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   court?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -228,7 +255,10 @@ export type ReservationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ReservationWhereInput | Prisma.ReservationWhereInput[]
   startTime?: Prisma.StringFilter<"Reservation"> | string
   endTime?: Prisma.StringFilter<"Reservation"> | string
+  date?: Prisma.DateTimeFilter<"Reservation"> | Date | string
+  location?: Prisma.StringFilter<"Reservation"> | string
   court?: Prisma.StringFilter<"Reservation"> | string
+  price?: Prisma.StringFilter<"Reservation"> | string
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   isDeleted?: Prisma.BoolFilter<"Reservation"> | boolean
@@ -240,7 +270,10 @@ export type ReservationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  date?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   court?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -257,7 +290,10 @@ export type ReservationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   startTime?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   endTime?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
+  date?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
+  location?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   court?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
+  price?: Prisma.StringWithAggregatesFilter<"Reservation"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Reservation"> | Date | string
   isDeleted?: Prisma.BoolWithAggregatesFilter<"Reservation"> | boolean
@@ -268,7 +304,10 @@ export type ReservationCreateInput = {
   id?: string
   startTime: string
   endTime: string
+  date: Date | string
+  location: string
   court: string
+  price: string
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
@@ -279,7 +318,10 @@ export type ReservationUncheckedCreateInput = {
   id?: string
   startTime: string
   endTime: string
+  date: Date | string
+  location: string
   court: string
+  price: string
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
@@ -290,7 +332,10 @@ export type ReservationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -301,7 +346,10 @@ export type ReservationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -312,7 +360,10 @@ export type ReservationCreateManyInput = {
   id?: string
   startTime: string
   endTime: string
+  date: Date | string
+  location: string
   court: string
+  price: string
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
@@ -323,7 +374,10 @@ export type ReservationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -333,7 +387,10 @@ export type ReservationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -354,7 +411,10 @@ export type ReservationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  date?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   court?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -365,7 +425,10 @@ export type ReservationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  date?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   court?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -376,7 +439,10 @@ export type ReservationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
+  date?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   court?: Prisma.SortOrder
+  price?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -429,7 +495,10 @@ export type ReservationCreateWithoutUserInput = {
   id?: string
   startTime: string
   endTime: string
+  date: Date | string
+  location: string
   court: string
+  price: string
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
@@ -439,7 +508,10 @@ export type ReservationUncheckedCreateWithoutUserInput = {
   id?: string
   startTime: string
   endTime: string
+  date: Date | string
+  location: string
   court: string
+  price: string
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
@@ -478,7 +550,10 @@ export type ReservationScalarWhereInput = {
   id?: Prisma.StringFilter<"Reservation"> | string
   startTime?: Prisma.StringFilter<"Reservation"> | string
   endTime?: Prisma.StringFilter<"Reservation"> | string
+  date?: Prisma.DateTimeFilter<"Reservation"> | Date | string
+  location?: Prisma.StringFilter<"Reservation"> | string
   court?: Prisma.StringFilter<"Reservation"> | string
+  price?: Prisma.StringFilter<"Reservation"> | string
   createdAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Reservation"> | Date | string
   isDeleted?: Prisma.BoolFilter<"Reservation"> | boolean
@@ -489,7 +564,10 @@ export type ReservationCreateManyUserInput = {
   id?: string
   startTime: string
   endTime: string
+  date: Date | string
+  location: string
   court: string
+  price: string
   createdAt?: Date | string
   updatedAt?: Date | string
   isDeleted?: boolean
@@ -499,7 +577,10 @@ export type ReservationUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -509,7 +590,10 @@ export type ReservationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -519,7 +603,10 @@ export type ReservationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.StringFieldUpdateOperationsInput | string
   endTime?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
   court?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -531,7 +618,10 @@ export type ReservationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   startTime?: boolean
   endTime?: boolean
+  date?: boolean
+  location?: boolean
   court?: boolean
+  price?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
@@ -543,7 +633,10 @@ export type ReservationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   startTime?: boolean
   endTime?: boolean
+  date?: boolean
+  location?: boolean
   court?: boolean
+  price?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
@@ -555,7 +648,10 @@ export type ReservationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   startTime?: boolean
   endTime?: boolean
+  date?: boolean
+  location?: boolean
   court?: boolean
+  price?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
@@ -567,14 +663,17 @@ export type ReservationSelectScalar = {
   id?: boolean
   startTime?: boolean
   endTime?: boolean
+  date?: boolean
+  location?: boolean
   court?: boolean
+  price?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isDeleted?: boolean
   userId?: boolean
 }
 
-export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "endTime" | "court" | "createdAt" | "updatedAt" | "isDeleted" | "userId", ExtArgs["result"]["reservation"]>
+export type ReservationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "endTime" | "date" | "location" | "court" | "price" | "createdAt" | "updatedAt" | "isDeleted" | "userId", ExtArgs["result"]["reservation"]>
 export type ReservationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -594,7 +693,10 @@ export type $ReservationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     startTime: string
     endTime: string
+    date: Date
+    location: string
     court: string
+    price: string
     createdAt: Date
     updatedAt: Date
     isDeleted: boolean
@@ -1026,7 +1128,10 @@ export interface ReservationFieldRefs {
   readonly id: Prisma.FieldRef<"Reservation", 'String'>
   readonly startTime: Prisma.FieldRef<"Reservation", 'String'>
   readonly endTime: Prisma.FieldRef<"Reservation", 'String'>
+  readonly date: Prisma.FieldRef<"Reservation", 'DateTime'>
+  readonly location: Prisma.FieldRef<"Reservation", 'String'>
   readonly court: Prisma.FieldRef<"Reservation", 'String'>
+  readonly price: Prisma.FieldRef<"Reservation", 'String'>
   readonly createdAt: Prisma.FieldRef<"Reservation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Reservation", 'DateTime'>
   readonly isDeleted: Prisma.FieldRef<"Reservation", 'Boolean'>

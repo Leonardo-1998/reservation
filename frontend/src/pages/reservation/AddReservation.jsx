@@ -14,14 +14,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import api from "@/lib/axios";
 
-const reservationSchema = z.object({
-  location: z.string(),
-  date: z.string(),
-  time: z.string().min(1, { message: "Pilih waktu terlebih dahulu" }),
-  court: z.string().min(1, { message: "Pilih lapangan terlebih dahulu" }),
-  price: z.string(),
-});
+const timeOptions = [
+  "09.00",
+  "10.00",
+  "11.00",
+  "12.00",
+  "13.00",
+  "14.00",
+  "15.00",
+  "16.00",
+  "17.00",
+];
+
+const reservationSchema = z
+  .object({
+    location: z.string(),
+    date: z.string(),
+    startTime: z.string().min(1, { message: "Pilih jam mulai" }),
+    endTime: z.string().min(1, { message: "Pilih jam selesai" }),
+    court: z.string().min(1, { message: "Pilih lapangan" }),
+    price: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    const startIdx = timeOptions.indexOf(data.startTime);
+    const endIdx = timeOptions.indexOf(data.endTime);
+
+    if (startIdx !== -1 && endIdx !== -1 && endIdx <= startIdx) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Jam selesai harus setelah jam mulai",
+        path: ["endTime"],
+      });
+    }
+  });
 
 export default function AddReservation({
   onClose,
@@ -31,46 +58,95 @@ export default function AddReservation({
   initialCourt = "",
 }) {
   const navigate = useNavigate();
-  const fixedPrice = "Rp 50.000";
+  const fixedPricePerPool = 50000;
+
+  // Split initialTime (e.g. "09.00 - 10.00") if provided
+  const prefillStart = initialTime ? initialTime.split(" - ")[0] : "";
+  const prefillEnd = initialTime ? initialTime.split(" - ")[1] : "";
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
       location: selectedLocation || "Bandung",
       date: selectedDate || new Date().toISOString().split("T")[0],
-      time: initialTime,
+      startTime: prefillStart,
+      endTime: prefillEnd,
       court: initialCourt,
-      price: fixedPrice,
+      price: "Rp 50.000",
     },
   });
 
+  const watchedStartTime = watch("startTime");
+  const watchedEndTime = watch("endTime");
+
+  // Logika otomatis untuk Jam Selesai dan Perhitungan Harga
+  useEffect(() => {
+    const startIndex = timeOptions.indexOf(watchedStartTime);
+    const endIndex = timeOptions.indexOf(watchedEndTime);
+
+    // 1. Auto-fill jam selesai jika kosong atau tidak valid
+    if (watchedStartTime && startIndex !== -1) {
+      if (endIndex === -1 || endIndex <= startIndex) {
+        const nextTime = timeOptions[startIndex + 1];
+        if (nextTime) {
+          setValue("endTime", nextTime);
+        }
+      }
+    }
+
+    // 2. Hitung harga berdasarkan durasi yang terpilih
+    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+      const hours = endIndex - startIndex;
+      const totalPrice = hours * fixedPricePerPool;
+      setValue("price", `Rp ${totalPrice.toLocaleString("id-ID")}`);
+    } else {
+      setValue("price", "Rp 0");
+    }
+  }, [watchedStartTime, watchedEndTime, setValue]);
+
   // Update form values when props change
   useEffect(() => {
+    const start = initialTime ? initialTime.split(" - ")[0] : "";
+    const end = initialTime ? initialTime.split(" - ")[1] : "";
+
+    // Hitung harga awal berdasarkan durasi
+    const startIndex = timeOptions.indexOf(start);
+    const endIndex = timeOptions.indexOf(end);
+    let initialPriceDisplay = "Rp 0";
+
+    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+      const hours = endIndex - startIndex;
+      const totalPrice = hours * fixedPricePerPool;
+      initialPriceDisplay = `Rp ${totalPrice.toLocaleString("id-ID")}`;
+    }
+
     reset({
       location: selectedLocation,
       date: selectedDate,
-      time: initialTime,
+      startTime: start,
+      endTime: end,
       court: initialCourt,
-      price: fixedPrice,
+      price: initialPriceDisplay,
     });
   }, [selectedLocation, selectedDate, initialTime, initialCourt, reset]);
 
-  function onSubmit(values) {
+  const onSubmit = async (values) => {
     console.log("Reservation Submitted:", values);
-    alert(
-      `Reservasi Berhasil!\n\nLapangan: ${values.court}\nLokasi: ${values.location}\nTanggal: ${values.date}\nWaktu: ${values.time}\nHarga: ${values.price}`,
-    );
-    if (onClose) {
+    try {
+      await api.post("/reservation/add", values);
+
       onClose();
-    } else {
-      navigate("/reservasi");
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center bg-transparent p-4">
@@ -104,28 +180,48 @@ export default function AddReservation({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="time">Waktu</Label>
-              <select
-                id="time"
-                {...register("time")}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <option value="">-- Pilih Waktu --</option>
-                <option value="09.00 - 10.00">09.00 - 10.00</option>
-                <option value="10.00 - 11.00">10.00 - 11.00</option>
-                <option value="11.00 - 12.00">11.00 - 12.00</option>
-                <option value="12.00 - 13.00">12.00 - 13.00</option>
-                <option value="13.00 - 14.00">13.00 - 14.00</option>
-                <option value="14.00 - 15.00">14.00 - 15.00</option>
-                <option value="15.00 - 16.00">15.00 - 16.00</option>
-                <option value="16.00 - 17.00">16.00 - 17.00</option>
-              </select>
-              {errors.time && (
-                <p className="text-sm font-medium text-destructive">
-                  {errors.time.message}
-                </p>
-              )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="startTime">Jam Mulai</Label>
+                <select
+                  id="startTime"
+                  {...register("startTime")}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">-- Mulai --</option>
+                  {timeOptions.slice(0, -1).map((time) => (
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
+                  ))}
+                </select>
+                {errors.startTime && (
+                  <p className="text-xs font-medium text-destructive">
+                    {errors.startTime.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="endTime">Jam Selesai</Label>
+                <select
+                  id="endTime"
+                  {...register("endTime")}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">-- Selesai --</option>
+                  {timeOptions.slice(1).map((time) => (
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
+                  ))}
+                </select>
+                {errors.endTime && (
+                  <p className="text-xs font-medium text-destructive">
+                    {errors.endTime.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -133,7 +229,7 @@ export default function AddReservation({
               <select
                 id="court"
                 {...register("court")}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <option value="">-- Pilih Lapangan --</option>
                 <option value="Lapangan A">Lapangan A</option>
