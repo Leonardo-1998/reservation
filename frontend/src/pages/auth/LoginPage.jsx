@@ -47,7 +47,7 @@ export default function LoginPage() {
       localStorage.setItem("accessToken", token);
 
       reset();
-      navigation("/reservation");
+      navigation("/dashboard");
     } catch (error) {
       console.error(error);
     }

@@ -24,4 +24,15 @@ export class ReservationService {
       },
     });
   }
+
+  async getUserReservations(userId: string) {
+    return this.prisma.reservation.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 }

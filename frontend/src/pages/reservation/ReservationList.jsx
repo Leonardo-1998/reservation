@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddReservation from "./AddReservation";
 import ReservationTable from "./ReservationTable";
 
@@ -57,6 +57,15 @@ export default function ReservationList() {
       />
     );
   }
+
+  useEffect(() => {
+    const fetchReservation = async () => {
+      const response = await fetch("http://localhost:3000/reservation");
+      const data = await response.json();
+      console.log(data);
+    };
+    fetchReservation();
+  }, []);
 
   return (
     <div className="flex-1 p-8 bg-slate-50 dark:bg-slate-900">

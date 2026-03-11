@@ -33,8 +33,13 @@ export class ReservationController {
     return successResponse(reservation, 'Berhasil menambahkan reservasi');
   }
 
-  @Get('test')
-  test(): String {
-    return 'A';
+  @Get('my-reservations')
+  @UseGuards(AuthGuard)
+  async getMyReservations(
+    @User('id') userId: string,
+  ): Promise<ApiResponse | null> {
+    const reservations =
+      await this.reservationService.getUserReservations(userId);
+    return successResponse(reservations, 'Berhasil mengambil data reservasi');
   }
 }
