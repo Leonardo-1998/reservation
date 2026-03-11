@@ -31,7 +31,7 @@ function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/60 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4 md:px-8">
         <Link
-          to="/"
+          to={token ? "/dashboard" : "/"}
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
         >
           <svg
@@ -60,61 +60,67 @@ function Navbar() {
             Home
           </Link>
           <Link
-            to="/about"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            About
-          </Link>
-          <Link
             to="/reservasi"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Reservasi
           </Link>
-          <Link
-            to="/dashboard"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            Dashboard
-          </Link>
+          {token && (
+            <Link
+              to="/dashboard"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              Dashboard
+            </Link>
+          )}
         </div>
 
-        {token && (
-          <div className="flex items-center text-sm font-medium">
-            <span className="text-muted-foreground mr-1">
-              Hello, {username}
-            </span>
-            <span className="mx-2 text-muted-foreground/40">|</span>
-            <button
-              onClick={handleLogout}
-              className="text-muted-foreground transition-colors hover:text-primary cursor-pointer"
-            >
-              Logout
-            </button>
-          </div>
-        )}
-
-        {!token && (
-          <div className="flex items-center gap-4">
-            <div className="flex items-center text-sm font-medium">
-              <Link
-                to="/login"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                Login
-              </Link>
-              <span className="mx-2 text-muted-foreground/40">|</span>
-              <Link
-                to="/register"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                Register
-              </Link>
-            </div>
-          </div>
+        {token ? (
+          <UserActions username={username} onLogout={handleLogout} />
+        ) : (
+          <GuestActions />
         )}
       </div>
     </nav>
+  );
+}
+
+// Sub-komponen untuk User yang sudah login
+function UserActions({ username, onLogout }) {
+  return (
+    <div className="flex items-center text-sm font-medium">
+      <span className="text-muted-foreground mr-1">Hello, {username}</span>
+      <span className="mx-2 text-muted-foreground/40">|</span>
+      <button
+        onClick={onLogout}
+        className="text-muted-foreground transition-colors hover:text-primary cursor-pointer font-medium"
+      >
+        Logout
+      </button>
+    </div>
+  );
+}
+
+// Sub-komponen untuk Guest (belum login)
+function GuestActions() {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="flex items-center text-sm font-medium">
+        <Link
+          to="/login"
+          className="text-muted-foreground transition-colors hover:text-primary"
+        >
+          Login
+        </Link>
+        <span className="mx-2 text-muted-foreground/40">|</span>
+        <Link
+          to="/register"
+          className="text-muted-foreground transition-colors hover:text-primary"
+        >
+          Register
+        </Link>
+      </div>
+    </div>
   );
 }
 

@@ -2,17 +2,8 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import AddReservation from "./AddReservation";
 import ReservationTable from "./ReservationTable";
-
-const scheduleData = [
-  { time: "09.00 - 10.00", A: "Kosong", B: "Kosong", C: "Kosong" },
-  { time: "10.00 - 11.00", A: "Kosong", B: "Reservasi_A", C: "Kosong" },
-  { time: "11.00 - 12.00", A: "Reservasi_B", B: "Kosong", C: "Reservasi_C" },
-  { time: "12.00 - 13.00", A: "Kosong", B: "Kosong", C: "Kosong" },
-  { time: "13.00 - 14.00", A: "Kosong", B: "Kosong", C: "Kosong" },
-  { time: "14.00 - 15.00", A: "Kosong", B: "Kosong", C: "Kosong" },
-  { time: "15.00 - 16.00", A: "Kosong", B: "Kosong", C: "Kosong" },
-  { time: "16.00 - 17.00", A: "Kosong", B: "Kosong", C: "Kosong" },
-];
+import api from "@/lib/axios";
+import { useNavigate } from "react-router-dom";
 
 const scheduleTime = [
   "09.00 - 10.00",
@@ -26,22 +17,43 @@ const scheduleTime = [
 ];
 
 export default function ReservationList() {
+  const navigate = useNavigate();
+
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );
   const [selectedLocation, setSelectedLocation] = useState("Bandung");
   const [view, setView] = useState("list");
   const [prefillData, setPrefillData] = useState({ time: "", court: "" });
+  const [reservations, setReservations] = useState([]);
 
   const handleAddReservation = () => {
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    }
+
     setPrefillData({ time: "", court: "" });
     setView("add");
   };
 
   const handleCellClick = (time, court) => {
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    }
+
     setPrefillData({ time, court });
     setView("add");
   };
+
+  useEffect(() => {
+    const fetchReservation = async () => {
+      const response = await api.get(
+        `reservation/reservations?location=${selectedLocation}&date=${selectedDate}`,
+      );
+      setReservations(response.data.data);
+    };
+    fetchReservation();
+  }, [selectedDate, selectedLocation, view]);
 
   if (view === "add") {
     return (
@@ -57,15 +69,6 @@ export default function ReservationList() {
       />
     );
   }
-
-  useEffect(() => {
-    const fetchReservation = async () => {
-      const response = await fetch("http://localhost:3000/reservation");
-      const data = await response.json();
-      console.log(data);
-    };
-    fetchReservation();
-  }, []);
 
   return (
     <div className="flex-1 p-8 bg-slate-50 dark:bg-slate-900">
@@ -113,7 +116,7 @@ export default function ReservationList() {
         </div>
 
         <ReservationTable
-          scheduleData={scheduleData}
+          reservations={reservations}
           scheduleTime={scheduleTime}
           onCellClick={handleCellClick}
         />

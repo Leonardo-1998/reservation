@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 
 function StatusBadge({ status }) {
-  const isAvailable = status === "Kosong";
+  const isAvailable = status === "Available";
   return (
     <span
       className={`px-3 py-1 rounded-full text-xs font-semibold border ${
@@ -23,10 +23,22 @@ function StatusBadge({ status }) {
 }
 
 export default function ReservationTable({
-  scheduleData,
+  reservations,
   scheduleTime,
   onCellClick,
 }) {
+  const getReservationStatus = (timeSlot, courtName) => {
+    const startTimeInSlot = timeSlot.split(" - ")[0];
+    const found = reservations?.find((res) => {
+      return (
+        res.startTime <= startTimeInSlot &&
+        res.endTime > startTimeInSlot &&
+        res.court === courtName
+      );
+    });
+    return found ? "Reserved" : "Available";
+  };
+
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md border overflow-hidden">
       <Table>
@@ -39,38 +51,27 @@ export default function ReservationTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {scheduleData.map((row, index) => {
-            const time = scheduleTime[index];
+          {scheduleTime.map((time, index) => {
             return (
               <TableRow
                 key={index}
                 className="hover:bg-slate-100/50 dark:hover:bg-slate-700/50"
               >
                 <TableCell className="font-medium">{time}</TableCell>
-                <TableCell
-                  className="text-center cursor-pointer"
-                  onClick={() =>
-                    row.A === "Kosong" && onCellClick?.(time, "Lapangan A")
-                  }
-                >
-                  <StatusBadge status={row.A} />
-                </TableCell>
-                <TableCell
-                  className="text-center cursor-pointer"
-                  onClick={() =>
-                    row.B === "Kosong" && onCellClick?.(time, "Lapangan B")
-                  }
-                >
-                  <StatusBadge status={row.B} />
-                </TableCell>
-                <TableCell
-                  className="text-center cursor-pointer"
-                  onClick={() =>
-                    row.C === "Kosong" && onCellClick?.(time, "Lapangan C")
-                  }
-                >
-                  <StatusBadge status={row.C} />
-                </TableCell>
+                {["Lapangan A", "Lapangan B", "Lapangan C"].map((court) => {
+                  const status = getReservationStatus(time, court);
+                  return (
+                    <TableCell
+                      key={court}
+                      className="text-center cursor-pointer"
+                      onClick={() =>
+                        status === "Available" && onCellClick?.(time, court)
+                      }
+                    >
+                      <StatusBadge status={status} />
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             );
           })}

@@ -29,10 +29,42 @@ export class ReservationService {
     return this.prisma.reservation.findMany({
       where: {
         userId,
+        isDeleted: false,
       },
       orderBy: {
         createdAt: 'desc',
       },
+    });
+  }
+
+  async getAllReservations() {
+    return this.prisma.reservation.findMany({
+      where: {
+        isDeleted: false,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async getAllReservationsByCourtAndDate(location: string, date: string) {
+    return this.prisma.reservation.findMany({
+      where: {
+        location: location,
+        date: new Date(date),
+        isDeleted: false,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async cancelReservation(id: string) {
+    return this.prisma.reservation.update({
+      where: { id },
+      data: { isDeleted: true },
     });
   }
 }

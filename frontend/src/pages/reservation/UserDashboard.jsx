@@ -8,7 +8,9 @@ import {
   CreditCard,
   Hash,
   Activity,
+  Trash2,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import api from "@/lib/axios";
 
 const UserDashboard = () => {
@@ -32,6 +34,44 @@ const UserDashboard = () => {
 
     fetchMyReservations();
   }, []);
+
+  const getReservationStart = (item) => {
+    const reservationDate = new Date(item.date);
+    const [startHour, startMinute] = item.startTime.split(".").map(Number);
+    reservationDate.setHours(startHour, startMinute, 0, 0);
+    return reservationDate;
+  };
+
+  const isCancellable = (item) => {
+    const now = new Date();
+    const start = getReservationStart(item);
+    // Minimal 24 jam sebelum jadwal
+    const diffInHours = (start.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return diffInHours >= 24;
+  };
+
+  const isPast = (item) => {
+    const now = new Date();
+    const start = getReservationStart(item);
+    return start < now;
+  };
+
+  const handleCancel = async (item) => {
+    if (!isCancellable(item)) {
+      alert("Reservasi hanya dapat dibatalkan minimal 24 jam sebelum jadwal.");
+      return;
+    }
+
+    if (window.confirm("Apakah Anda yakin ingin membatalkan reservasi ini?")) {
+      try {
+        await api.delete(`reservation/${item.id}`);
+        setReservations((prev) => prev.filter((res) => res.id !== item.id));
+      } catch (err) {
+        console.error("Cancel error:", err);
+        alert("Gagal membatalkan reservasi");
+      }
+    }
+  };
 
   return (
     <div className="flex-1 p-8 bg-slate-50 dark:bg-slate-900 overflow-y-auto">
@@ -117,6 +157,7 @@ const UserDashboard = () => {
                         </div>
                       </th>
                       <th className="px-6 py-4 border-b text-center">Status</th>
+                      <th className="px-6 py-4 border-b text-center">Aksi</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
@@ -158,12 +199,38 @@ const UserDashboard = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <Badge
-                            variant="outline"
-                            className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800 pointer-events-none"
-                          >
-                            Sukses
-                          </Badge>
+                          {isPast(item) ? (
+                            <Badge
+                              variant="outline"
+                              className="bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-900/20 dark:text-slate-400 dark:border-slate-800"
+                            >
+                              Selesai
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800"
+                            >
+                              Mendatang
+                            </Badge>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {isCancellable(item) ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                              onClick={() => handleCancel(item)}
+                              title="Batalkan Reservasi"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          ) : (
+                            <span className="text-xs text-muted-foreground italic">
+                              Locked
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))}

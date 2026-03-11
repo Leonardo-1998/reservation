@@ -6,6 +6,8 @@ import {
   Delete,
   Body,
   UseGuards,
+  Query,
+  Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@/common/guards/auth.guard';
 import { ReservationService } from './reservation.service';
@@ -24,7 +26,6 @@ export class ReservationController {
     @User('id') userId: string,
     @Body() addReservationDto: AddReservationDto,
   ): Promise<ApiResponse | null> {
-    console.log(addReservationDto);
     const reservation = await this.reservationService.addReservation(
       userId,
       addReservationDto,
@@ -41,5 +42,31 @@ export class ReservationController {
     const reservations =
       await this.reservationService.getUserReservations(userId);
     return successResponse(reservations, 'Berhasil mengambil data reservasi');
+  }
+
+  @Get('all-reservations')
+  async getAllReservations(): Promise<ApiResponse | null> {
+    const reservations = await this.reservationService.getAllReservations();
+    return successResponse(reservations, 'Berhasil mengambil data reservasi');
+  }
+
+  @Get('reservations')
+  async getAllReservationsByCourtAndDate(
+    @Query() query: { location: string; date: string },
+  ): Promise<ApiResponse | null> {
+    const { location, date } = query;
+    const reservations =
+      await this.reservationService.getAllReservationsByCourtAndDate(
+        location,
+        date,
+      );
+    return successResponse(reservations, 'Berhasil mengambil data reservasi');
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  async cancelReservation(@Param('id') id: string): Promise<ApiResponse | null> {
+    const reservation = await this.reservationService.cancelReservation(id);
+    return successResponse(reservation, 'Berhasil membatalkan reservasi');
   }
 }

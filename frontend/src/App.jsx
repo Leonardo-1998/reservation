@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Navbar from "./components/layout/Navbar";
 import ReservationList from "./pages/reservation/ReservationList";
 import UserDashboard from "./pages/reservation/UserDashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -22,7 +23,9 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/reservasi" element={<ReservationList />} />
-            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<UserDashboard />} />
+            </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
