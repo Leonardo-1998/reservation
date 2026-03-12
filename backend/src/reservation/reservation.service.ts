@@ -56,7 +56,7 @@ export class ReservationService {
         isDeleted: false,
       },
       orderBy: {
-        createdAt: 'desc',
+        date: 'asc',
       },
     });
   }

@@ -140,9 +140,11 @@ export default function AddReservation({
   const onSubmit = async (values) => {
     console.log("Reservation Submitted:", values);
     try {
-      await api.post("/reservation/add", values);
+      const response = await api.post("/midtrans/payment", values);
+      console.log(response);
+      // await api.post("/reservation/add", values);
 
-      onClose();
+      // onClose();
     } catch (error) {
       console.error(error);
     }
